@@ -69,6 +69,31 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
+.nes-button {
+    background-color: transparent; /* makes the button transparent */
+    padding: 20px 20px;            /* adds padding to the button */
+    font-size: 16px;                /* sets the font size */
+    cursor: pointer;                /* changes cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* smooth transition for hover state */
+    position: absolute;             /* positions the button absolutely */
+    transform: translate(-50%, -50%); /* centers the button */
+}
+
+
+.nes-button-ab {
+    background-color: transparent; /* makes the button transparent */
+    padding: 10px 10px;            /* adds padding to the button */
+    font-size: 30px;                /* sets the font size */
+    cursor: pointer;                /* changes cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* smooth transition for hover state */
+    position: absolute;             /* positions the button absolutely */
+    transform: translate(-50%, -50%); /* centers the button */
+}
+
+
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
