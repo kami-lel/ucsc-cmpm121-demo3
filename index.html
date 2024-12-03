@@ -1,24 +1,55 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
-    <body>
-      <div id="imageContainer" style="position: relative; background-image: url('assets/nest.svg'); background-size: contain; background-repeat: no-repeat; width: 612px; height: 252px;">
-          <button id="west" title="west" class="nes-button" style="top: 59%; left: 10%; "></button>
-          <button id="east" title="east" class="nes-button" style="top: 59%; left: 23%; "></button>
-          <button id="north" title="north" class="nes-button" style="top: 44%; left: 16.5%; "></button>
-          <button id="south" title="south" class="nes-button" style="top: 75%; left: 16.5%; "></button>
-          <button id="sensor" title="sensor" class="nes-button-ab"  style="top: 70.7%; left: 70.4%; ">🌐</button>
-          <button id="reset" title="reset" class="nes-button-ab"  style="top: 70.7%; left: 83.2%; ">🚮</button>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="sidebar">
+      <h1>Inventory</h1>
+      <a href="#link1">TODO</a>
+      <a href="#link2">Link 2</a>
+      <a href="#link3">Link 3</a>
+    </div>
 
-            <div id="statusPanel"></div>
-            <div id="map"></div>
-        </div>
-        <script type="module" src="/src/example.ts"></script>
-    </body>
+    <div id="mainContent">
+      <div id="imageContainer" 
+           style="
+             position: relative; 
+             background-image: url('assets/nest.svg'); 
+             background-size: contain; 
+             background-repeat: no-repeat; 
+             width: 490px;
+             height: 202px;
+           ">
+
+        <button id="west" title="west" class="nes-button" 
+                style="top: 59%; left: 10%;">
+        </button>
+        <button id="east" title="east" class="nes-button" 
+                style="top: 59%; left: 23%;">
+        </button>
+        <button id="north" title="north" class="nes-button" 
+                style="top: 44%; left: 16.5%;">
+        </button>
+        <button id="south" title="south" class="nes-button" 
+                style="top: 75%; left: 16.5%;">
+        </button>
+        <button id="sensor" title="sensor" class="nes-button-ab" 
+                style="top: 70.7%; left: 70.4%;">
+          🌐
+        </button>
+        <button id="reset" title="reset" class="nes-button-ab" 
+                style="top: 70.7%; left: 83.2%;">
+          🚮
+        </button>
+      </div>
+
+      <div id="statusPanel"></div>
+      <div id="map"></div>
+    </div>
+
+    <script type="module" src="/src/example.ts"></script>
+  </body>
 </html>
