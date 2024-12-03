@@ -7,9 +7,7 @@ import "./style.css";
 
 // Fix missing marker images
 import "./leafletWorkaround.ts";
-// FIXME rm? import "./game.ts";
 // Deterministic random number generator
-import luck from "./luck.ts";
 import {board, Cell, convert_cell2key, origin} from "./board.ts";
 import {Coin, create_coin_element} from "./coin.ts";
 import {gcaches, GeoCache} from "./cache.ts";
@@ -56,6 +54,7 @@ leaflet
 
 
 function render_cell(cell: Cell) {  // in map
+
     const bounds = board.get_cell_bounds(cell)
 
     // Add a rectangle to the map to represent the cache
@@ -64,21 +63,19 @@ function render_cell(cell: Cell) {  // in map
 
     const cell_key = convert_cell2key(cell);
 
-    // FIXME
-
     // Handle interactions with the cache
     rect.bindPopup(() => {
-    // The popup offers a description and button
-    const popupDiv = document.createElement("div");
+        // The popup offers a description and button
+        const popupDiv = document.createElement("div");
 
-    popupDiv.innerText = `You Found a Cache at ${cell_key}`;
+        popupDiv.innerText = `You Found a Cache at ${cell_key}`;
 
-    const cache: GeoCache = gcaches.get(cell)!;
-    for (const coin of cache.coins) {
-        popupDiv.append(create_coin_element(coin));
-    }
+        const cache: GeoCache = gcaches.get(cell_key)!;
+        for (const coin of cache.coins) {
+            popupDiv.append(create_coin_element(coin, cache));
+        }
 
-    return popupDiv;
+        return popupDiv;
     });
 
 }
@@ -94,22 +91,15 @@ playerMarker.addTo(map);
 
 // listen for the 'cache-updated' dispatch event
 document.addEventListener('cache-updated', () => {
-    cells = board.get_cells_near_point(current_location);
+    const cells = board.get_cells_near_point(current_location);
     for (const cell of cells) {
-        render_cell(cell);
+        const cell_key = convert_cell2key(cell)
+        if (gcaches.has(cell_key)) {
+            render_cell(cell);
+        }
     }
 });
 
 
-
-
-// HACK main
-let cells = board.generate_cell_around(origin);
-for (const cell of cells) {
-    const coin1: Coin = {cell: cell, serial: 1};
-    const coin2: Coin = {cell: cell, serial: 2};
-    const coin3: Coin = {cell: cell, serial: 3};
-    gcaches.set(cell, {coins: [coin1, coin2, coin3]})
-}
 
 document.dispatchEvent(new CustomEvent('cache-updated'));
