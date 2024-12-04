@@ -8,7 +8,7 @@ import "./style.css";
 // Fix missing marker images
 import "./leafletWorkaround.ts";
 // Deterministic random number generator
-import {board, Cell, convert_cell2key, OAKES_CLASSROOM} from "./board.ts";
+import {board, Cell, convert_cell2key, convert_cell2point, OAKES_CLASSROOM} from "./board.ts";
 import {create_coin_element_in_popup, create_coin_element_in_sidebar
         } from "./coin.ts";
 import {gcaches, generate_cell_around, GeoCache, inventory} from "./cache.ts";
@@ -125,16 +125,26 @@ document.addEventListener('cache-updated', () => {
         }
     }
 
-    // add player marker in map
-    if (player.marker) { map.removeLayer(player.marker); }
-    player.update_player_marker();
-    const player_marker = player.marker;
-    player_marker.bindTooltip("You're here!")
-    player_marker.addTo(map);
+    player.update_player_marker(map);
+    player.update_player_path(map);
 
     render_sidebar();
 });
 
+
+document.addEventListener('homing', (event) => {
+    const cell = event.detail;
+    map.panTo(convert_cell2point(cell))
+});
+
+
+document.getElementById('reset')?.addEventListener('click', () => {
+    // TODO
+    // TODO use prompt()
+});
+
+
+// TODO persistent data storage
 
 
 document.dispatchEvent(new CustomEvent('cache-updated'));

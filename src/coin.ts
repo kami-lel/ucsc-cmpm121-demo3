@@ -13,6 +13,20 @@ function convert_coin2key(coin: Coin): string {
 }
 
 
+function create_homing_button(cell) {
+    const button = document.createElement('button');
+    button.innerText = 'Homing';
+
+    button.addEventListener('click', () => {
+        const event = new CustomEvent('homing', { detail: cell });
+        document.dispatchEvent(event); // Dispatch to document
+    });
+
+    return button;
+}
+
+
+
 export function create_coin_element_in_popup(
         coin: Coin, cache: GeoCache) : HTMLDivElement {
     const div_element = document.createElement('div')
@@ -29,6 +43,9 @@ export function create_coin_element_in_popup(
     });
 
     div_element.appendChild(collect_button);
+
+
+    div_element.appendChild(create_homing_button(coin.cell));
 
     return div_element;
 }
@@ -56,6 +73,9 @@ export function create_coin_element_in_sidebar(
     });
 
     div_element.appendChild(collect_button);
+
+
+    div_element.appendChild(create_homing_button(coin.cell));
 
     return div_element;
 }

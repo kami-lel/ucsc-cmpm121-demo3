@@ -18,10 +18,12 @@ export function convert_cell2key(cell: Cell): string {
     return [i, j].toString();
 }
 
+export function convert_cell2point(cell: Cell) {
+    return new leaflet.LatLng((cell.i + 0.5) * TILE_DEGREES,
+            (cell.j + 0.5) * TILE_DEGREES);
+}
 
 export class Board {
-    // private readonly knownCells = new Map<string, Cell>();
-    // HACK for debug
     knownCells = new Map<string, Cell>();
 
     private get_canonical_cell(cell: Cell): Cell {

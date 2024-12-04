@@ -3,7 +3,8 @@ import luck from "./luck";
 import leaflet from "leaflet";
 
 import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
-        OAKES_CLASSROOM} from "./board.ts"
+        OAKES_CLASSROOM,
+        convert_cell2point} from "./board.ts"
 import {Coin} from "./coin.ts"
 
 
@@ -30,9 +31,8 @@ export function generate_cell_around(point:leaflet.LatLng) {
 
     for (let delta_i = -NEIGHBORHOOD_SIZE; delta_i < NEIGHBORHOOD_SIZE; delta_i++) {
     for (let delta_j = -NEIGHBORHOOD_SIZE; delta_j < NEIGHBORHOOD_SIZE; delta_j++) {
-        const current_point = new leaflet.LatLng(
-                (pointc.i + delta_i) * TILE_DEGREES,
-                (pointc.j + delta_j) * TILE_DEGREES);
+        const current_point = convert_cell2point(
+                {i: (pointc.i + delta_i), j: (pointc.j + delta_j)})
 
         // convert to cell & add it in board
         const current_cell = board.get_cell_for_point(current_point);
