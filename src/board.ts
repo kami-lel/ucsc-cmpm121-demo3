@@ -8,6 +8,12 @@ export const TILE_DEGREES = 1e-4;
 export const NEIGHBORHOOD_SIZE = 8;
 
 
+export interface Momento {
+    toMomento(): string;
+    fromMoment(momento: string): void;
+}
+
+
 export interface Cell {
     readonly i: number;
     readonly j: number
@@ -23,6 +29,7 @@ export function convert_cell2point(cell: Cell) {
             (cell.j + 0.5) * TILE_DEGREES);
 }
 
+
 export class Board {
     knownCells = new Map<string, Cell>();
 
@@ -30,7 +37,7 @@ export class Board {
         const key = convert_cell2key(cell);
 
         if (!this.knownCells.has(key)) {  // add new cell
-            this.knownCells.set(key, cell)
+            this.knownCells.set(key, cell);
         }
 
         return this.knownCells.get(key)!;
@@ -44,11 +51,9 @@ export class Board {
 
     get_cell_bounds(cell: Cell): leaflet.LatLngBounds {
         return leaflet.latLngBounds([
-                [cell.i * TILE_DEGREES,
-                cell.j * TILE_DEGREES],
-                [(cell.i + 1) * TILE_DEGREES,
-                (cell.j + 1) * TILE_DEGREES],
-                ]);
+            [cell.i * TILE_DEGREES, cell.j * TILE_DEGREES],
+            [(cell.i + 1) * TILE_DEGREES, (cell.j + 1) * TILE_DEGREES],
+        ]);
     }
 
     get_cells_near_point(point: leaflet.LatLng): Cell[] {
@@ -57,16 +62,17 @@ export class Board {
         const {oi, oj} = {oi: origin.i, oj: origin.j};
 
         for (const [_key, cell] of this.knownCells) {
-            const {i, j} = cell
+            const {i, j} = cell;
             if (Math.abs(oi - i) <= NEIGHBORHOOD_SIZE &&
-                    Math.abs(oj - j) <= NEIGHBORHOOD_SIZE) {
-                result_cells.push(cell)
+                Math.abs(oj - j) <= NEIGHBORHOOD_SIZE) {
+                result_cells.push(cell);
             }
         }
 
         return result_cells;
     }
+}
 
-};
 
 export const board = new Board();
+

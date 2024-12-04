@@ -64,7 +64,7 @@ function render_cell(cell: Cell) {  // in map
 
     // Handle interactions with the cache
     rect.bindPopup(() => {
-        cell_with_popup = cell
+        cell_with_popup = cell;
         const cell_key = convert_cell2key(cell);
 
         // The popup offers a description and button
@@ -148,3 +148,5 @@ document.getElementById('reset')?.addEventListener('click', () => {
 
 
 document.dispatchEvent(new CustomEvent('cache-updated'));
+
+// TODO make coin have emoji

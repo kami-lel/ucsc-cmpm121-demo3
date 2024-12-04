@@ -5,7 +5,7 @@ import leaflet from "leaflet";
 import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
         OAKES_CLASSROOM,
         convert_cell2point} from "./board.ts"
-import {Coin} from "./coin.ts"
+import {Coin, create_coin, find_emoji} from "./coin.ts"
 
 
 const CACHE_SPAWN_PROBABILITY = 0.1;
@@ -17,7 +17,7 @@ export interface Momento<T> {
 }
 
 
-export interface GeoCache {
+export interface GeoCache {  // TODO mk momento
     coins: Coin[];
 }
 
@@ -40,9 +40,11 @@ export function generate_cell_around(point:leaflet.LatLng) {
 
         if (!gcaches.has(cell_key) &&  // not generated before
                 luck(cell_key) < CACHE_SPAWN_PROBABILITY) {
-            const coin1: Coin = {cell: current_cell, serial: 1};
-            const coin2: Coin = {cell: current_cell, serial: 2};
-            const coin3: Coin = {cell: current_cell, serial: 3};
+
+            const coin1: Coin = create_coin(current_cell, 1);
+            const coin2: Coin = create_coin(current_cell, 2);
+            const coin3: Coin = create_coin(current_cell, 3);
+
             gcaches.set(cell_key, {coins: [coin1, coin2, coin3]})
         }
     }
@@ -64,6 +66,3 @@ export function transfer_coin(coin: Coin, src: GeoCache, dest: GeoCache): void {
     dest.coins.push(coin);
 }
 
-
-// HACK
-generate_cell_around(OAKES_CLASSROOM)

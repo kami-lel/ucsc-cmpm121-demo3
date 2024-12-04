@@ -15,7 +15,7 @@
 }
 
 #sidebar {
-  width: 300px; /* fixed width for the sidebar */
+  width: 350px; /* fixed width for the sidebar */
   position: fixed; /* fix sidebar to the right */
   top: 0; /* align to the top */
   right: 0; /* align to the right */
