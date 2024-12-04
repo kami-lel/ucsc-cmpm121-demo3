@@ -3,9 +3,8 @@ import leaflet from "leaflet";
 
 
 // Location of our classroom (as identified on Google Maps)
-const OAKES_CLASSROOM = leaflet.latLng(36.98949379578401, -122.06277128548504);
+export const OAKES_CLASSROOM = leaflet.latLng(36.98949379578401, -122.06277128548504);
 export const TILE_DEGREES = 1e-4;
-export const origin = OAKES_CLASSROOM
 export const NEIGHBORHOOD_SIZE = 8;
 
 

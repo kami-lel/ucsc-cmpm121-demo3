@@ -8,10 +8,11 @@ import "./style.css";
 // Fix missing marker images
 import "./leafletWorkaround.ts";
 // Deterministic random number generator
-import {board, Cell, convert_cell2key, origin} from "./board.ts";
-import {Coin, create_coin_element_in_popup, create_coin_element_in_sidebar
+import {board, Cell, convert_cell2key, OAKES_CLASSROOM} from "./board.ts";
+import {create_coin_element_in_popup, create_coin_element_in_sidebar
         } from "./coin.ts";
-import {gcaches, GeoCache, inventory} from "./cache.ts";
+import {gcaches, generate_cell_around, GeoCache, inventory} from "./cache.ts";
+import {player} from "./player.ts"
 
 
 const APP_TITLE = "Geocoin Carrier";
@@ -31,8 +32,8 @@ document.title= APP_TITLE;
 
 
 // Create the map (element with id "map" is defined in index.html)
-const map = leaflet.map(document.getElementById("map")!, {
-    center: origin,
+export const map = leaflet.map(document.getElementById("map")!, {
+    center: OAKES_CLASSROOM,
     zoom: GAMEPLAY_ZOOM_LEVEL,
     minZoom: GAMEPLAY_ZOOM_LEVEL,
     maxZoom: GAMEPLAY_ZOOM_LEVEL,
@@ -49,12 +50,6 @@ leaflet
       '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   })
   .addTo(map);
-
-// Add a marker to represent the player
-const player_location = origin;
-const playerMarker = leaflet.marker(origin);
-playerMarker.bindTooltip("You're here!");
-playerMarker.addTo(map);
 
 
 
@@ -95,7 +90,7 @@ function render_sidebar() {
 
     // show player location
     const location_div = document.createElement('div');
-    const player_cell = convert_cell2key(board.get_cell_for_point(player_location));
+    const player_cell = convert_cell2key(player.cell);
     location_div.innerText = `Player at ${player_cell}`;
     sidebar.appendChild(location_div);
 
@@ -121,13 +116,23 @@ document.addEventListener('cache-updated', () => {
         }
     });
 
-    const cells = board.get_cells_near_point(player_location);
+    generate_cell_around(player.location);
+
+    const cells = board.get_cells_near_point(player.location);
+
     for (const cell of cells) {
         const cell_key = convert_cell2key(cell)
         if (gcaches.has(cell_key)) {
             render_cell(cell);
         }
     }
+
+    // add player marker in map
+    if (player.marker) { map.removeLayer(player.marker); }
+    player.update_player_marker();
+    const player_marker = player.marker;
+    player_marker.bindTooltip("You're here!")
+    player_marker.addTo(map);
 
     render_sidebar();
 });

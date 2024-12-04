@@ -3,7 +3,7 @@ import luck from "./luck";
 import leaflet from "leaflet";
 
 import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
-        origin} from "./board.ts"
+        OAKES_CLASSROOM} from "./board.ts"
 import {Coin} from "./coin.ts"
 
 
@@ -66,4 +66,4 @@ export function transfer_coin(coin: Coin, src: GeoCache, dest: GeoCache): void {
 
 
 // HACK
-generate_cell_around(origin)
+generate_cell_around(OAKES_CLASSROOM)
