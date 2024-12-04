@@ -6,12 +6,15 @@ import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
         origin} from "./board.ts"
 import {Coin} from "./coin.ts"
 
+
 const CACHE_SPAWN_PROBABILITY = 0.1;
+
 
 export interface Momento<T> {
     toMomento(): T;
     fromMomento(momento: T): void;
 }
+
 
 export interface GeoCache {
     coins: Coin[];

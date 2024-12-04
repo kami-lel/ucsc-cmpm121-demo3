@@ -9,8 +9,9 @@ import "./style.css";
 import "./leafletWorkaround.ts";
 // Deterministic random number generator
 import {board, Cell, convert_cell2key, origin} from "./board.ts";
-import {Coin, create_coin_element} from "./coin.ts";
-import {gcaches, GeoCache} from "./cache.ts";
+import {Coin, create_coin_element_in_popup, create_coin_element_in_sidebar
+        } from "./coin.ts";
+import {gcaches, GeoCache, inventory} from "./cache.ts";
 
 
 const APP_TITLE = "Geocoin Carrier";
@@ -25,9 +26,6 @@ const GAMEPLAY_ZOOM_LEVEL = 19;
 // element `statusPanel` is defined in index.html
 const status_panel = document.querySelector<HTMLDivElement>("#statusPanel")!;
 status_panel.innerText = "Search Start";
-
-const player_location_panel = document.getElementById('player_location')!;
-player_location_panel.innerText = '123';  // HACK
 
 document.title= APP_TITLE;
 
@@ -52,6 +50,16 @@ leaflet
   })
   .addTo(map);
 
+// Add a marker to represent the player
+const player_location = origin;
+const playerMarker = leaflet.marker(origin);
+playerMarker.bindTooltip("You're here!");
+playerMarker.addTo(map);
+
+
+
+let cell_with_popup: Cell = {i:0, j:0};
+
 
 function render_cell(cell: Cell) {  // in map
 
@@ -61,10 +69,11 @@ function render_cell(cell: Cell) {  // in map
     const rect = leaflet.rectangle(bounds);
     rect.addTo(map);
 
-    const cell_key = convert_cell2key(cell);
-
     // Handle interactions with the cache
     rect.bindPopup(() => {
+        cell_with_popup = cell
+        const cell_key = convert_cell2key(cell);
+
         // The popup offers a description and button
         const popupDiv = document.createElement("div");
 
@@ -72,7 +81,7 @@ function render_cell(cell: Cell) {  // in map
 
         const cache: GeoCache = gcaches.get(cell_key)!;
         for (const coin of cache.coins) {
-            popupDiv.append(create_coin_element(coin, cache));
+            popupDiv.append(create_coin_element_in_popup(coin, cache));
         }
 
         return popupDiv;
@@ -80,24 +89,47 @@ function render_cell(cell: Cell) {  // in map
 
 }
 
+function render_sidebar() {
+    const sidebar = document.getElementById('sidebar')!;
+    sidebar.innerHTML = '';
 
-// Add a marker to represent the player
-const current_location = origin;
-const playerMarker = leaflet.marker(origin);
-playerMarker.bindTooltip("You're here!");
-playerMarker.addTo(map);
+    // show player location
+    const location_div = document.createElement('div');
+    const player_cell = convert_cell2key(board.get_cell_for_point(player_location));
+    location_div.innerText = `Player at ${player_cell}`;
+    sidebar.appendChild(location_div);
+
+    // inventory title
+    var inventory_title = document.createElement('h3');
+    inventory_title.textContent = 'Inventory:';
+    sidebar.appendChild(inventory_title);
+
+    for (const coin of inventory.coins) {
+        sidebar.appendChild(create_coin_element_in_sidebar(
+                coin, cell_with_popup))
+    }
+}
 
 
 
 // listen for the 'cache-updated' dispatch event
 document.addEventListener('cache-updated', () => {
-    const cells = board.get_cells_near_point(current_location);
+    // remove all rect
+    map.eachLayer((layer) => {
+        if (layer instanceof leaflet.Rectangle) {
+            map.removeLayer(layer);
+        }
+    });
+
+    const cells = board.get_cells_near_point(player_location);
     for (const cell of cells) {
         const cell_key = convert_cell2key(cell)
         if (gcaches.has(cell_key)) {
             render_cell(cell);
         }
     }
+
+    render_sidebar();
 });
 
 
