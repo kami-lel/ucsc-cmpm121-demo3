@@ -1,5 +1,5 @@
 
-import luck from "./luck";
+import luck from "./luck.ts";
 import leaflet from "leaflet";
 
 import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
