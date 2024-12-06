@@ -30,13 +30,15 @@ function convert_coin2key(coin: Coin): string {
     return `${i}:${j}#${coin.serial}`;
 }
 
+export let homing_cell: Cell;
 
-function create_homing_button(cell) {
+function create_homing_button(cell: Cell) {
     const button = document.createElement('button');
     button.innerText = 'Homing';
 
     button.addEventListener('click', () => {
-        const event = new CustomEvent('homing', { detail: cell });
+        const event = new CustomEvent('homing');
+        homing_cell = cell;
         document.dispatchEvent(event); // Dispatch to document
     });
 

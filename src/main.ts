@@ -9,7 +9,7 @@ import "./style.css";
 import "./leafletWorkaround.ts";
 // Deterministic random number generator
 import {board, Cell, convert_cell2key, convert_cell2point, OAKES_CLASSROOM} from "./board.ts";
-import {create_coin_element_in_popup, create_coin_element_in_sidebar
+import {create_coin_element_in_popup, create_coin_element_in_sidebar, homing_cell
         } from "./coin.ts";
 import {gcaches, generate_cell_around, GeoCache, inventory} from "./cache.ts";
 import {player} from "./player.ts"
@@ -132,9 +132,9 @@ document.addEventListener('cache-updated', () => {
 });
 
 
-document.addEventListener('homing', (event) => {
-    const cell = event.detail;
-    map.panTo(convert_cell2point(cell))
+
+document.addEventListener('homing', (_event) => {
+    map.panTo(convert_cell2point(homing_cell))
 });
 
 

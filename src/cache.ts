@@ -5,7 +5,7 @@ import leaflet from "leaflet";
 import {Cell, board, NEIGHBORHOOD_SIZE, TILE_DEGREES, convert_cell2key,
         OAKES_CLASSROOM,
         convert_cell2point} from "./board.ts"
-import {Coin, create_coin, find_emoji} from "./coin.ts"
+import {Coin, create_coin} from "./coin.ts"
 
 
 const CACHE_SPAWN_PROBABILITY = 0.1;
