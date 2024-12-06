@@ -139,12 +139,7 @@ document.addEventListener('homing', (_event) => {
 
 
 document.getElementById('reset')?.addEventListener('click', () => {
-    // TODO use prompt()
-    console.log(inventory.toMomento());
-    const momento = inventory.toMomento();
-    inventory.fromMomento(momento);
-    document.dispatchEvent(new CustomEvent('cache-updated'));
-    // HACK
+    document.dispatchEvent(new CustomEvent('reset-storage'));
 });
 
 

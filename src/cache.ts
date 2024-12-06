@@ -59,23 +59,57 @@ export class GeoCache implements Momento<string> {
 
 }
 
-// TODO persistent data storage
 
-
-export const gcaches = new Map<string, GeoCache>();
-export const inventory = new GeoCache({i: 0, j: 0});
+export let gcaches = new Map<string, GeoCache>();
+export let inventory = new GeoCache({i: 0, j: 0});
 
 
 // load persistent data storage
 const local_storage_inventory = localStorage.getItem('inventory');
-console.log(local_storage_inventory);  // HACK
 if (local_storage_inventory !== null) {
     inventory.fromMomento(local_storage_inventory);
 }
 
-export function save_local_storage_inventory() {
-    localStorage.setItem('inventory', inventory.toMomento());
+const local_storage_gcaches = localStorage.getItem('gcaches');
+if (local_storage_gcaches !== null) {
+
+    const splitGcaches = local_storage_gcaches.split('\n\n\n');
+    for (const cache_str of splitGcaches) {
+        const gcache = new GeoCache({i: 0, j: 0})
+        gcache.fromMomento(cache_str);
+        const key = convert_cell2key(gcache.cell);
+        gcaches.set(key, gcache);
+    }
 }
+
+
+document.addEventListener('inventory-change', () => {
+  localStorage.setItem('inventory', inventory.toMomento());
+});
+
+
+document.addEventListener('gcaches-change', () => {
+    const caches: string[] = [];
+
+    gcaches.forEach((gcache, _key) => {
+        caches.push(gcache.toMomento())
+    })
+
+    const result = caches.join('\n\n\n')
+    localStorage.setItem('gcaches', result);
+});
+
+
+document.addEventListener('reset-storage', (_event) => {
+    gcaches = new Map<string, GeoCache>();
+    inventory = new GeoCache({i: 0, j: 0});
+
+    document.dispatchEvent(new Event('inventory-change'));
+    document.dispatchEvent(new Event('gcaches-change'));
+    document.dispatchEvent(new CustomEvent('cache-updated'));
+});
+
+
 
 
 
@@ -104,6 +138,8 @@ export function generate_cell_around(point:leaflet.LatLng) {
             new_cache.coins = [coin1, coin2, coin3];
             gcaches.set(cell_key, new_cache)
         }
+
+        document.dispatchEvent(new Event('gcaches-change'));
     }
     }
 }

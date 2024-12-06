@@ -1,7 +1,7 @@
 
 
 import { Cell, convert_cell2key } from "./board.ts";
-import { gcaches, GeoCache, inventory, save_local_storage_inventory, transfer_coin } from "./cache.ts";
+import { gcaches, GeoCache, inventory, transfer_coin } from "./cache.ts";
 
 
 export interface Coin {
@@ -45,7 +45,8 @@ export function create_coin_element_in_popup(
 
     collect_button.addEventListener('click', () => {
         transfer_coin(coin, cache, inventory)
-        save_local_storage_inventory();
+        document.dispatchEvent(new Event('inventory-change'));
+        document.dispatchEvent(new Event('gcaches-change'));
         document.dispatchEvent(new CustomEvent('cache-updated'));
     });
 
@@ -75,8 +76,8 @@ export function create_coin_element_in_sidebar(
         const confirmation = confirm(confirm_text);
         if (confirmation) {
             transfer_coin(coin, inventory, gcaches.get(cell_key)!)
-            save_local_storage_inventory();
-            // BUG depositing not working
+            document.dispatchEvent(new Event('inventory-change'));
+            document.dispatchEvent(new Event('gcaches-change'));
             document.dispatchEvent(new CustomEvent('cache-updated'));
         }
     });
