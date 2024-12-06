@@ -1,8 +1,8 @@
 
 
-import { Cell, convert_cell2key } from "./board";
-import { gcaches, GeoCache, inventory, transfer_coin } from "./cache";
-import luck from "./luck";
+import { Cell, convert_cell2key } from "./board.ts";
+import { gcaches, GeoCache, inventory, transfer_coin } from "./cache.ts";
+import luck from "./luck.ts";
 
 
 const COIN_EMOJI: string[] = [
