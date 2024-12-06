@@ -2,13 +2,13 @@ import luck from "./luck.ts";
 import leaflet from "leaflet";
 
 import {
-    Cell,
     board,
-    NEIGHBORHOOD_SIZE,
-    TILE_DEGREES,
+    Cell,
     convert_cell2key,
+    convert_cell2point,
+    NEIGHBORHOOD_SIZE,
     OAKES_CLASSROOM,
-    convert_cell2point
+    TILE_DEGREES
 } from "./board.ts";
 import { Coin, convert_coin2key } from "./coin.ts";
 import { create_coin } from "./create_coin.ts";
@@ -37,21 +37,21 @@ export class GeoCache implements Momento<string> {
             lines.push(convert_coin2key(coin));
         }
 
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
     fromMomento(momento: string): void {
-        const lines: string[] = momento.split('\n');
+        const lines: string[] = momento.split("\n");
 
         // parse cell
-        const [i, j] = lines[0].split(',').map(Number);
+        const [i, j] = lines[0].split(",").map(Number);
         this.cell = { i, j };
 
         // parse coins
         this.coins = [];
         for (const line of lines.slice(1)) {
-            const [cellPart, serial] = line.split('#');
-            const [i, j] = cellPart.split(':').map(Number);
+            const [cellPart, serial] = line.split("#");
+            const [i, j] = cellPart.split(":").map(Number);
 
             const coin = create_coin({ i, j }, Number(serial));
             this.coins.push(coin);
@@ -63,14 +63,14 @@ export let gcaches = new Map<string, GeoCache>();
 export let inventory = new GeoCache({ i: 0, j: 0 });
 
 // load persistent data storage
-const local_storage_inventory = localStorage.getItem('inventory');
+const local_storage_inventory = localStorage.getItem("inventory");
 if (local_storage_inventory !== null) {
     inventory.fromMomento(local_storage_inventory);
 }
 
-const local_storage_gcaches = localStorage.getItem('gcaches');
+const local_storage_gcaches = localStorage.getItem("gcaches");
 if (local_storage_gcaches !== null) {
-    const splitGcaches = local_storage_gcaches.split('\n\n\n');
+    const splitGcaches = local_storage_gcaches.split("\n\n\n");
     for (const cache_str of splitGcaches) {
         const gcache = new GeoCache({ i: 0, j: 0 });
         gcache.fromMomento(cache_str);
@@ -79,37 +79,45 @@ if (local_storage_gcaches !== null) {
     }
 }
 
-document.addEventListener('inventory-change', () => {
-    localStorage.setItem('inventory', inventory.toMomento());
+document.addEventListener("inventory-change", () => {
+    localStorage.setItem("inventory", inventory.toMomento());
 });
 
-document.addEventListener('gcaches-change', () => {
+document.addEventListener("gcaches-change", () => {
     const caches: string[] = [];
 
     gcaches.forEach((gcache, _key) => {
         caches.push(gcache.toMomento());
     });
 
-    const result = caches.join('\n\n\n');
-    localStorage.setItem('gcaches', result);
+    const result = caches.join("\n\n\n");
+    localStorage.setItem("gcaches", result);
 });
 
-document.addEventListener('reset-storage', (_event) => {
+document.addEventListener("reset-storage", (_event) => {
     gcaches = new Map<string, GeoCache>();
     inventory = new GeoCache({ i: 0, j: 0 });
 
-    document.dispatchEvent(new Event('inventory-change'));
-    document.dispatchEvent(new Event('gcaches-change'));
-    document.dispatchEvent(new CustomEvent('cache-updated'));
+    document.dispatchEvent(new Event("inventory-change"));
+    document.dispatchEvent(new Event("gcaches-change"));
+    document.dispatchEvent(new CustomEvent("cache-updated"));
 });
 
 export function generate_cell_around(point: leaflet.LatLng) {
     const pointc = board.get_cell_for_point(point);
 
-    for (let delta_i = -NEIGHBORHOOD_SIZE; delta_i < NEIGHBORHOOD_SIZE; delta_i++) {
-        for (let delta_j = -NEIGHBORHOOD_SIZE; delta_j < NEIGHBORHOOD_SIZE; delta_j++) {
+    for (
+        let delta_i = -NEIGHBORHOOD_SIZE;
+        delta_i < NEIGHBORHOOD_SIZE;
+        delta_i++
+    ) {
+        for (
+            let delta_j = -NEIGHBORHOOD_SIZE;
+            delta_j < NEIGHBORHOOD_SIZE;
+            delta_j++
+        ) {
             const current_point = convert_cell2point(
-                { i: (pointc.i + delta_i), j: (pointc.j + delta_j) }
+                { i: (pointc.i + delta_i), j: (pointc.j + delta_j) },
             );
 
             // convert to cell & add it in board
@@ -126,7 +134,7 @@ export function generate_cell_around(point: leaflet.LatLng) {
                 gcaches.set(cell_key, new_cache);
             }
 
-            document.dispatchEvent(new Event('gcaches-change'));
+            document.dispatchEvent(new Event("gcaches-change"));
         }
     }
 }

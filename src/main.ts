@@ -7,6 +7,7 @@ import "./style.css";
 
 // Fix missing marker images
 import "./leafletWorkaround.ts";
+
 // Deterministic random number generator
 import { board, Cell, convert_cell2key, convert_cell2point, OAKES_CLASSROOM } from "./board.ts";
 import { create_coin_element_in_popup, create_coin_element_in_sidebar, homing_cell } from "./coin.ts";
@@ -42,7 +43,8 @@ leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 let cell_with_popup: Cell = { i: 0, j: 0 };
 
-function render_cell(cell: Cell) {  // in map
+function render_cell(cell: Cell) {
+    // in map
     const bounds = board.get_cell_bounds(cell);
 
     // Add a rectangle to the map to represent the cache

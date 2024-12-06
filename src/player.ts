@@ -1,4 +1,4 @@
-import { latLng, LatLng } from "leaflet";
+import { LatLng, latLng } from "leaflet";
 import leaflet from "leaflet";
 import { board, Cell, OAKES_CLASSROOM, TILE_DEGREES } from "./board.ts";
 
@@ -33,7 +33,7 @@ class Player {
         }
 
         this.path = leaflet.polyline(this.prev_locations, {
-            color: 'red',
+            color: "red",
             weight: 2,
             opacity: 1.0,
         }).addTo(map); // assuming you have a map variable already initialized
@@ -41,14 +41,14 @@ class Player {
 
     teleport_to(point: LatLng) {
         this.location = point;
-        document.dispatchEvent(new CustomEvent('cache-updated'));
+        document.dispatchEvent(new CustomEvent("cache-updated"));
         this.prev_locations = [];
     }
 
     move_to(point: LatLng) {
         this.prev_locations.push(this.location);
         this.location = point;
-        document.dispatchEvent(new CustomEvent('cache-updated'));
+        document.dispatchEvent(new CustomEvent("cache-updated"));
     }
 
     move_north(): void {
@@ -59,48 +59,51 @@ class Player {
 
     move_south(): void {
         let { lat, lng } = this.location;
-        lat -= TILE_DEGREES;  // moving south decreases latitude
+        lat -= TILE_DEGREES; // moving south decreases latitude
         this.move_to(latLng(lat, lng));
     }
 
     move_east(): void {
         let { lat, lng } = this.location;
-        lng += TILE_DEGREES;  // moving east increases longitude
+        lng += TILE_DEGREES; // moving east increases longitude
         this.move_to(latLng(lat, lng));
     }
 
     move_west(): void {
         let { lat, lng } = this.location;
-        lng -= TILE_DEGREES;  // moving west decreases longitude
+        lng -= TILE_DEGREES; // moving west decreases longitude
         this.move_to(latLng(lat, lng));
     }
 }
 
 export const player = new Player();
 
-document.getElementById('north')?.addEventListener('click', () => {
+document.getElementById("north")?.addEventListener("click", () => {
     player.move_north();
 });
 
-document.getElementById('south')?.addEventListener('click', () => {
+document.getElementById("south")?.addEventListener("click", () => {
     player.move_south();
 });
 
-document.getElementById('east')?.addEventListener('click', () => {
+document.getElementById("east")?.addEventListener("click", () => {
     player.move_east();
 });
 
-document.getElementById('west')?.addEventListener('click', () => {
+document.getElementById("west")?.addEventListener("click", () => {
     player.move_west();
 });
 
-document.getElementById('sensor')?.addEventListener('click', () => {
+document.getElementById("sensor")?.addEventListener("click", () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
-            const currentLocation = new LatLng(position.coords.latitude, position.coords.longitude);
+            const currentLocation = new LatLng(
+                position.coords.latitude,
+                position.coords.longitude,
+            );
             player.teleport_to(currentLocation);
         });
     } else {
-        console.error('Geolocation is not supported by this browser.');
+        console.error("Geolocation is not supported by this browser.");
     }
 });

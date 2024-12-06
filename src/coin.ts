@@ -15,11 +15,11 @@ export function convert_coin2key(coin: Coin): string {
 export let homing_cell: Cell;
 
 function create_homing_button(cell: Cell) {
-    const button = document.createElement('button');
-    button.innerText = 'Homing';
+    const button = document.createElement("button");
+    button.innerText = "Homing";
 
-    button.addEventListener('click', () => {
-        const event = new CustomEvent('homing');
+    button.addEventListener("click", () => {
+        const event = new CustomEvent("homing");
         homing_cell = cell;
         document.dispatchEvent(event); // Dispatch to document
     });
@@ -29,22 +29,22 @@ function create_homing_button(cell: Cell) {
 
 export function create_coin_element_in_popup(
     coin: Coin,
-    cache: GeoCache
+    cache: GeoCache,
 ): HTMLDivElement {
-    const div_element = document.createElement('div');
+    const div_element = document.createElement("div");
 
     const text = `${coin.emoji}[${convert_coin2key(coin)}]`;
     div_element.innerText = text;
 
     // add collect button
-    const collect_button = document.createElement('button');
-    collect_button.innerText = 'Collect';
+    const collect_button = document.createElement("button");
+    collect_button.innerText = "Collect";
 
-    collect_button.addEventListener('click', () => {
+    collect_button.addEventListener("click", () => {
         transfer_coin(coin, cache, inventory);
-        document.dispatchEvent(new Event('inventory-change'));
-        document.dispatchEvent(new Event('gcaches-change'));
-        document.dispatchEvent(new CustomEvent('cache-updated'));
+        document.dispatchEvent(new Event("inventory-change"));
+        document.dispatchEvent(new Event("gcaches-change"));
+        document.dispatchEvent(new CustomEvent("cache-updated"));
     });
 
     div_element.appendChild(collect_button);
@@ -56,27 +56,29 @@ export function create_coin_element_in_popup(
 
 export function create_coin_element_in_sidebar(
     coin: Coin,
-    cell_with_popup: Cell
+    cell_with_popup: Cell,
 ): HTMLDivElement {
-    const div_element = document.createElement('div');
+    const div_element = document.createElement("div");
 
     const text = `${coin.emoji}[${convert_coin2key(coin)}]`;
     div_element.innerText = text;
 
     // add deposit
-    const collect_button = document.createElement('button');
-    collect_button.innerText = 'Deposit';
+    const collect_button = document.createElement("button");
+    collect_button.innerText = "Deposit";
 
-    collect_button.addEventListener('click', () => {
+    collect_button.addEventListener("click", () => {
         const cell_key = convert_cell2key(cell_with_popup);
 
-        const confirm_text = `Deposit Coin[${convert_coin2key(coin)}] at selected Cell [${cell_key}]?`;
+        const confirm_text = `Deposit Coin[${
+            convert_coin2key(coin)
+        }] at selected Cell [${cell_key}]?`;
         const confirmation = confirm(confirm_text);
         if (confirmation) {
             transfer_coin(coin, inventory, gcaches.get(cell_key)!);
-            document.dispatchEvent(new Event('inventory-change'));
-            document.dispatchEvent(new Event('gcaches-change'));
-            document.dispatchEvent(new CustomEvent('cache-updated'));
+            document.dispatchEvent(new Event("inventory-change"));
+            document.dispatchEvent(new Event("gcaches-change"));
+            document.dispatchEvent(new CustomEvent("cache-updated"));
         }
     });
 

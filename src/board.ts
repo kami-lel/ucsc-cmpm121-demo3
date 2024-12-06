@@ -1,7 +1,10 @@
 import leaflet from "leaflet";
 
 // Location of our classroom (as identified on Google Maps)
-export const OAKES_CLASSROOM = leaflet.latLng(36.98949379578401, -122.06277128548504);
+export const OAKES_CLASSROOM = leaflet.latLng(
+  36.98949379578401,
+  -122.06277128548504,
+);
 export const TILE_DEGREES = 1e-4;
 export const NEIGHBORHOOD_SIZE = 8;
 
@@ -21,7 +24,10 @@ export function convert_cell2key(cell: Cell): string {
 }
 
 export function convert_cell2point(cell: Cell) {
-    return new leaflet.LatLng((cell.i + 0.5) * TILE_DEGREES, (cell.j + 0.5) * TILE_DEGREES);
+    return new leaflet.LatLng(
+        (cell.i + 0.5) * TILE_DEGREES,
+        (cell.j + 0.5) * TILE_DEGREES,
+    );
 }
 
 export class Board {
@@ -46,7 +52,7 @@ export class Board {
     get_cell_bounds(cell: Cell): leaflet.LatLngBounds {
         return leaflet.latLngBounds([
             [cell.i * TILE_DEGREES, cell.j * TILE_DEGREES],
-            [(cell.i + 1) * TILE_DEGREES, (cell.j + 1) * TILE_DEGREES]
+            [(cell.i + 1) * TILE_DEGREES, (cell.j + 1) * TILE_DEGREES],
         ]);
     }
 
@@ -57,8 +63,10 @@ export class Board {
 
         for (const [_key, cell] of this.knownCells) {
             const { i, j } = cell;
-            if (Math.abs(oi - i) <= NEIGHBORHOOD_SIZE &&
-                Math.abs(oj - j) <= NEIGHBORHOOD_SIZE) {
+            if (
+                Math.abs(oi - i) <= NEIGHBORHOOD_SIZE &&
+                Math.abs(oj - j) <= NEIGHBORHOOD_SIZE
+            ) {
                 result_cells.push(cell);
             }
         }
