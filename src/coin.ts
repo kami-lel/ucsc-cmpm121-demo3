@@ -1,22 +1,7 @@
 
 
 import { Cell, convert_cell2key } from "./board.ts";
-import { gcaches, GeoCache, inventory, transfer_coin } from "./cache.ts";
-import luck from "./luck.ts";
-
-
-const COIN_EMOJI: string[] = [
-    '🌍', '🌈', '🎉', '🍀', '🍉', '🍌', '🥑', '🍒', '🍦', '🍉',
-    '🍇', '🍊', '🍌', '🍓', '🍋', '🥥', '🍍', '🥝', '🍏', '🥭',
-    '🍅', '🥕', '🚀', '🌌', '🌈', '�', '🌻', '🌿', '🐚', '🌵',
-    '🏵️', '🍂', '🌾', '🍁', '🌸', '🎆', '🎇', '🌠', '✨', '🌟',
-    '🔥', '💧', '🌊', '💦', '🌀', '☁️', '🌈', '🏞️', '🌄', '⛰️',
-    '🌉', '🏙️', '🌌', '✨', '🔮', '🎮', '🌈', '📦', '🎁', '🎈',
-    '🎀', '🎊', '🧧', '✉️', '🎨', '✏️', '🖌️', '🎤', '🎼', '📯',
-    '🍕', '🎷', '🥁', '🥇', '🥈', '🥉', '🏆', '🎽', '⚽', '🏀',
-    '🐶', '🐱', '🐭', '🐰', '🦊', '🐻', '🦁', '🐯', '🦒', '🐘',
-    '🐬', '🐟', '🌈', '🎏', '🍦', '🍑', '💐', '🌹', '🔔', '🌂', '🧊'
-];
+import { gcaches, GeoCache, inventory, save_local_storage_inventory, transfer_coin } from "./cache.ts";
 
 
 export interface Coin {
@@ -25,7 +10,7 @@ export interface Coin {
     readonly emoji: string;
 }
 
-function convert_coin2key(coin: Coin): string {
+export function convert_coin2key(coin: Coin): string {
     let { i, j } = coin.cell;
     return `${i}:${j}#${coin.serial}`;
 }
@@ -60,6 +45,7 @@ export function create_coin_element_in_popup(
 
     collect_button.addEventListener('click', () => {
         transfer_coin(coin, cache, inventory)
+        save_local_storage_inventory();
         document.dispatchEvent(new CustomEvent('cache-updated'));
     });
 
@@ -89,6 +75,7 @@ export function create_coin_element_in_sidebar(
         const confirmation = confirm(confirm_text);
         if (confirmation) {
             transfer_coin(coin, inventory, gcaches.get(cell_key)!)
+            save_local_storage_inventory();
             // BUG depositing not working
             document.dispatchEvent(new CustomEvent('cache-updated'));
         }
@@ -99,11 +86,4 @@ export function create_coin_element_in_sidebar(
     div_element.appendChild(create_homing_button(coin.cell));
 
     return div_element;
-}
-
-export function create_coin(cell: Cell, serial: number): Coin {
-    const lucky_number = luck(convert_cell2key(cell) + serial.toString());
-    const emoji_idx = Math.floor(lucky_number * 100);
-    const emoji = COIN_EMOJI[emoji_idx]
-    return {cell: cell, serial: serial, emoji: emoji}
 }

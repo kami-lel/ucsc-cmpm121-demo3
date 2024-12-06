@@ -20,7 +20,7 @@ export interface Cell {
 }
 
 export function convert_cell2key(cell: Cell): string {
-    let {i, j} = cell;
+    const {i, j} = cell;
     return [i, j].toString();
 }
 

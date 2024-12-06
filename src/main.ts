@@ -93,7 +93,7 @@ function render_sidebar() {
     sidebar.appendChild(location_div);
 
     // inventory title
-    var inventory_title = document.createElement('h3');
+    const inventory_title = document.createElement('h3');
     inventory_title.textContent = 'Inventory:';
     sidebar.appendChild(inventory_title);
 
@@ -139,14 +139,14 @@ document.addEventListener('homing', (_event) => {
 
 
 document.getElementById('reset')?.addEventListener('click', () => {
-    // TODO
     // TODO use prompt()
+    console.log(inventory.toMomento());
+    const momento = inventory.toMomento();
+    inventory.fromMomento(momento);
+    document.dispatchEvent(new CustomEvent('cache-updated'));
+    // HACK
 });
 
 
-// TODO persistent data storage
-
 
 document.dispatchEvent(new CustomEvent('cache-updated'));
-
-// TODO make coin have emoji
