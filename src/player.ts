@@ -1,12 +1,6 @@
-
-import { latLng, LatLng, Point } from "leaflet";
+import { latLng, LatLng } from "leaflet";
 import leaflet from "leaflet";
 import { board, Cell, OAKES_CLASSROOM, TILE_DEGREES } from "./board.ts";
-
-
-
-
-
 
 class Player {
     location: LatLng;
@@ -24,21 +18,24 @@ class Player {
 
     update_player_marker(map: leaflet.Map): void {
         // add player marker in map
-        if (this.marker) { map.removeLayer(this.marker); }
+        if (this.marker) {
+            map.removeLayer(this.marker);
+        }
 
-        this.marker = leaflet.marker(this.location)
-        this.marker.bindTooltip("You're here!")
+        this.marker = leaflet.marker(this.location);
+        this.marker.bindTooltip("You're here!");
         this.marker.addTo(map);
-
     }
 
     update_player_path(map: leaflet.Map): void {
-        if (this.path) { map.removeLayer(this.path); }
+        if (this.path) {
+            map.removeLayer(this.path);
+        }
 
         this.path = leaflet.polyline(this.prev_locations, {
             color: 'red',
             weight: 2,
-            opacity: 1.0
+            opacity: 1.0,
         }).addTo(map); // assuming you have a map variable already initialized
     }
 
@@ -77,12 +74,9 @@ class Player {
         lng -= TILE_DEGREES;  // moving west decreases longitude
         this.move_to(latLng(lat, lng));
     }
-
 }
 
-
 export const player = new Player();
-
 
 document.getElementById('north')?.addEventListener('click', () => {
     player.move_north();
@@ -100,12 +94,6 @@ document.getElementById('west')?.addEventListener('click', () => {
     player.move_west();
 });
 
-
-document.getElementById('west')?.addEventListener('click', () => {
-    player.move_west();
-});
-
-
 document.getElementById('sensor')?.addEventListener('click', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -116,5 +104,3 @@ document.getElementById('sensor')?.addEventListener('click', () => {
         console.error('Geolocation is not supported by this browser.');
     }
 });
-
-

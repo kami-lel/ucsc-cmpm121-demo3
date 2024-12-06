@@ -1,12 +1,9 @@
-
-
 import { Cell, convert_cell2key } from "./board.ts";
 import { gcaches, GeoCache, inventory, transfer_coin } from "./cache.ts";
 
-
 export interface Coin {
     readonly cell: Cell;
-    readonly serial: number
+    readonly serial: number;
     readonly emoji: string;
 }
 
@@ -30,11 +27,11 @@ function create_homing_button(cell: Cell) {
     return button;
 }
 
-
-
 export function create_coin_element_in_popup(
-        coin: Coin, cache: GeoCache) : HTMLDivElement {
-    const div_element = document.createElement('div')
+    coin: Coin,
+    cache: GeoCache
+): HTMLDivElement {
+    const div_element = document.createElement('div');
 
     const text = `${coin.emoji}[${convert_coin2key(coin)}]`;
     div_element.innerText = text;
@@ -44,7 +41,7 @@ export function create_coin_element_in_popup(
     collect_button.innerText = 'Collect';
 
     collect_button.addEventListener('click', () => {
-        transfer_coin(coin, cache, inventory)
+        transfer_coin(coin, cache, inventory);
         document.dispatchEvent(new Event('inventory-change'));
         document.dispatchEvent(new Event('gcaches-change'));
         document.dispatchEvent(new CustomEvent('cache-updated'));
@@ -57,10 +54,11 @@ export function create_coin_element_in_popup(
     return div_element;
 }
 
-
 export function create_coin_element_in_sidebar(
-        coin: Coin, cell_with_popup: Cell) : HTMLDivElement {
-    const div_element = document.createElement('div')
+    coin: Coin,
+    cell_with_popup: Cell
+): HTMLDivElement {
+    const div_element = document.createElement('div');
 
     const text = `${coin.emoji}[${convert_coin2key(coin)}]`;
     div_element.innerText = text;
@@ -72,10 +70,10 @@ export function create_coin_element_in_sidebar(
     collect_button.addEventListener('click', () => {
         const cell_key = convert_cell2key(cell_with_popup);
 
-        const confirm_text = `Deposit Coin[${convert_coin2key(coin)}] at selected Cell [${cell_key}]?`
+        const confirm_text = `Deposit Coin[${convert_coin2key(coin)}] at selected Cell [${cell_key}]?`;
         const confirmation = confirm(confirm_text);
         if (confirmation) {
-            transfer_coin(coin, inventory, gcaches.get(cell_key)!)
+            transfer_coin(coin, inventory, gcaches.get(cell_key)!);
             document.dispatchEvent(new Event('inventory-change'));
             document.dispatchEvent(new Event('gcaches-change'));
             document.dispatchEvent(new CustomEvent('cache-updated'));

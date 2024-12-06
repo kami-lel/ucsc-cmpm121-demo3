@@ -8,28 +8,21 @@ import "./style.css";
 // Fix missing marker images
 import "./leafletWorkaround.ts";
 // Deterministic random number generator
-import {board, Cell, convert_cell2key, convert_cell2point, OAKES_CLASSROOM} from "./board.ts";
-import {create_coin_element_in_popup, create_coin_element_in_sidebar, homing_cell
-        } from "./coin.ts";
-import {gcaches, generate_cell_around, GeoCache, inventory} from "./cache.ts";
-import {player} from "./player.ts"
-
+import { board, Cell, convert_cell2key, convert_cell2point, OAKES_CLASSROOM } from "./board.ts";
+import { create_coin_element_in_popup, create_coin_element_in_sidebar, homing_cell } from "./coin.ts";
+import { gcaches, generate_cell_around, GeoCache, inventory } from "./cache.ts";
+import { player } from "./player.ts";
 
 const APP_TITLE = "Geocoin Carrier";
 
 // Tunable gameplay parameters
 const GAMEPLAY_ZOOM_LEVEL = 19;
 
-
-
-
-
 // element `statusPanel` is defined in index.html
 const status_panel = document.querySelector<HTMLDivElement>("#statusPanel")!;
 status_panel.innerText = "Search Start";
 
-document.title= APP_TITLE;
-
+document.title = APP_TITLE;
 
 // Create the map (element with id "map" is defined in index.html)
 export const map = leaflet.map(document.getElementById("map")!, {
@@ -41,22 +34,16 @@ export const map = leaflet.map(document.getElementById("map")!, {
     scrollWheelZoom: false,
 });
 
-
 // Populate the map with a background tile layer
 leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(map);
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+}).addTo(map);
 
-
-
-let cell_with_popup: Cell = {i:0, j:0};
-
+let cell_with_popup: Cell = { i: 0, j: 0 };
 
 function render_cell(cell: Cell) {  // in map
-
-    const bounds = board.get_cell_bounds(cell)
+    const bounds = board.get_cell_bounds(cell);
 
     // Add a rectangle to the map to represent the cache
     const rect = leaflet.rectangle(bounds);
@@ -79,7 +66,6 @@ function render_cell(cell: Cell) {  // in map
 
         return popupDiv;
     });
-
 }
 
 function render_sidebar() {
@@ -98,12 +84,9 @@ function render_sidebar() {
     sidebar.appendChild(inventory_title);
 
     for (const coin of inventory.coins) {
-        sidebar.appendChild(create_coin_element_in_sidebar(
-                coin, cell_with_popup))
+        sidebar.appendChild(create_coin_element_in_sidebar(coin, cell_with_popup));
     }
 }
-
-
 
 // listen for the 'cache-updated' dispatch event
 document.addEventListener('cache-updated', () => {
@@ -119,7 +102,7 @@ document.addEventListener('cache-updated', () => {
     const cells = board.get_cells_near_point(player.location);
 
     for (const cell of cells) {
-        const cell_key = convert_cell2key(cell)
+        const cell_key = convert_cell2key(cell);
         if (gcaches.has(cell_key)) {
             render_cell(cell);
         }
@@ -131,17 +114,12 @@ document.addEventListener('cache-updated', () => {
     render_sidebar();
 });
 
-
-
 document.addEventListener('homing', (_event) => {
-    map.panTo(convert_cell2point(homing_cell))
+    map.panTo(convert_cell2point(homing_cell));
 });
-
 
 document.getElementById('reset')?.addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('reset-storage'));
 });
-
-
 
 document.dispatchEvent(new CustomEvent('cache-updated'));
