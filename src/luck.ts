@@ -11,6 +11,3 @@ export default function luck(situation: string): number {
     LARGE_INTEGER
   );
 }
-
-
-
