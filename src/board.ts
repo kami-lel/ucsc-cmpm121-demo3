@@ -44,8 +44,8 @@ export class Board {
   }
 
   get_cell_for_point(point: leaflet.LatLng): Cell {
-    let i = Math.floor(point.lat / TILE_DEGREES);
-    let j = Math.floor(point.lng / TILE_DEGREES);
+    const i = Math.floor(point.lat / TILE_DEGREES);
+    const j = Math.floor(point.lng / TILE_DEGREES);
     return this.get_canonical_cell({ i: i, j: j });
   }
 

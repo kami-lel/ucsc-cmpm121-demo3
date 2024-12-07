@@ -7,8 +7,6 @@ import {
   convert_cell2key,
   convert_cell2point,
   NEIGHBORHOOD_SIZE,
-  OAKES_CLASSROOM,
-  TILE_DEGREES,
 } from "./board.ts";
 import { Coin, convert_coin2key } from "./coin.ts";
 import { create_coin } from "./create_coin.ts";
